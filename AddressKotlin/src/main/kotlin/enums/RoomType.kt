@@ -1,6 +1,6 @@
-package Enums
+package enums
 
-enum class RooType {
+enum class RoomType {
     APARTMENT,
     OFFICE,
     ROOM,

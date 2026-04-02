@@ -1,6 +1,6 @@
-package Enums
+package enums
 
-enum class Region {
+enum class RegionType {
     REPUBLIC,
     KRAY,
     OBLAST,

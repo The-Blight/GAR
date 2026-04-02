@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.3.10"
+    kotlin("jvm") version "2.3.20"
 }
 
 group = "org.example"
@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
+    implementation(kotlin("stdlib-jdk25"))
 }
 
 kotlin {
