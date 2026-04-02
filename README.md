@@ -1,1 +1,1 @@
-﻿![](/Diagram.md)
+﻿![](/Diagram.svg)
