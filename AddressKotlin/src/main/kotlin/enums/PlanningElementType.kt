@@ -1,5 +1,9 @@
 package enums
 
+
+/**
+ * Типы элементов планировочной структуры (ЭПС).
+ */
 enum class PlanningElementType {
     MICRODISTRICT,
     SNT,

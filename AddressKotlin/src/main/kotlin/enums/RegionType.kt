@@ -1,5 +1,8 @@
 package enums
 
+/**
+ * Типы субъектов Российской Федерации (регионов).
+ */
 enum class RegionType {
     REPUBLIC,
     KRAY,

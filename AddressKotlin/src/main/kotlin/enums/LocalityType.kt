@@ -1,5 +1,9 @@
 package enums
 
+
+/**
+ * Типы населенных пунктов.
+ */
 enum class LocalityType {
     CITY,
     VILLAGE,
