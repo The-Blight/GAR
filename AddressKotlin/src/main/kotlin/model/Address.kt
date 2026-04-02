@@ -1,6 +1,5 @@
 package model
 
-import interfaces.IBuilder
 
 data class Address(
     val region: Region,

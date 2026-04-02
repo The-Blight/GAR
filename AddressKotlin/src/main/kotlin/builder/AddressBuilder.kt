@@ -1,4 +1,4 @@
-package Builder
+package builder
 
 import interfaces.IBuilder
 import model.Address
@@ -15,7 +15,7 @@ class AddressBuilder : IBuilder {
     private var _locality: Locality? = null
     private var _planningElement: PlanningElement? = null
     private var _street: Street? = null
-    private var _building: Building? = null;
+    private var _building: Building? = null
     private var _room: Room? = null;
 
 
