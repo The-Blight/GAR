@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk25"))
+    implementation(kotlin("stdlib"))
 }
 
 kotlin {
