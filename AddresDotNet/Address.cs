@@ -7,7 +7,7 @@ namespace AddresDotNet;
 /// <summary>
 /// Неизменяемый объект адреса, собранный из отдельных компонентов.
 /// </summary>
-public class Address: IEnumerable<IValueObject>
+public class Address: IEnumerable<IValueObject>, IClone<Address>
 {
     /// <summary>
     /// Регион адреса.
@@ -91,4 +91,15 @@ public class Address: IEnumerable<IValueObject>
         return GetEnumerator();
     }
     
+    /// <summary>
+    /// Делает копию <see cref="Address"/>.
+    /// </summary>
+    public Address Clone() => new(
+        Region.Clone(),
+        Locality?.Clone(),
+        PlanningElement?.Clone(),
+        Street?.Clone(),
+        Building?.Clone(),
+        Room?.Clone()
+    );
 }

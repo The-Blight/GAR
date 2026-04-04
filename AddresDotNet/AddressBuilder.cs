@@ -7,7 +7,7 @@ namespace AddresDotNet;
 /// Строитель (Builder) для создания объекта адреса.
 /// Позволяет пошагово задать компоненты адреса и затем собрать неизменяемый <see cref="Address"/>.
 /// </summary>
-public class AddressBuilder
+public class AddressBuilder: IClone<Address>
 {
     /// <summary>
     /// Регион адреса.
@@ -100,6 +100,17 @@ public class AddressBuilder
         _room = new Room { Value = number, Type = type };
         return this;
     }
+    /// <summary>
+    /// Делает копию <see cref="Address"/>.
+    /// </summary>
+    public Address Clone() => new(
+        _region.Clone(),
+        _locality?.Clone(),
+        _planningElement?.Clone(),
+        _street?.Clone(),
+        _building?.Clone(),
+        _room?.Clone()
+    );
     /// <summary>
     /// Собирает и возвращает объект адреса на основе заданных компонентов.
     /// </summary>
