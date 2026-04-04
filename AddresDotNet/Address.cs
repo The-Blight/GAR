@@ -1,48 +1,62 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AddresDotNet;
 /// <summary>
 /// Неизменяемый объект адреса, собранный из отдельных компонентов.
 /// </summary>
-public class Address
+public class Address: IEnumerable<IValueObject>
 {
     /// <summary>
     /// Регион адреса.
     /// </summary>
-    public Region Region { get; }
+    public Region Region { get; init; }
+
     /// <summary>
-    /// Населённый пункт (город, деревня и т.п.).
+    /// Населённый пункт.
     /// </summary>
-    public Locality Locality { get;}
+    public Locality? Locality { get; init; }
+
     /// <summary>
     /// Планировочный элемент.
     /// </summary>
-    public PlanningElement PlanningElement { get;}
+    public PlanningElement? PlanningElement { get; init; }
+
     /// <summary>
     /// Улица или проезд.
     /// </summary>
-    public Street Street { get;}
+    public Street? Street { get; init; }
+
     /// <summary>
     /// Здание.
     /// </summary>
-    public Building Building { get;}
+    public Building? Building { get; init; }
+
     /// <summary>
     /// Помещение внутри здания.
     /// </summary>
-    public Room Room { get;}
+    public Room? Room { get; init; }
+
     /// <summary>
     /// Создаёт объект адреса на основе готового билдера.
     /// </summary>
-    /// <param name="builder">Билдер, содержащий все компоненты адреса.</param>
-    /// <exception cref="ArgumentNullException">Если любой из компонентов в билдере равен <see langword="null"/>.</exception>
-    public Address(AddressBuilder builder)
+    /// <param name="region">Регион адреса (обязательный).</param>
+    /// <param name="locality">Населённый пункт (может быть <see langword="null"/>).</param>
+    /// <param name="planningElement">Планировочный элемент (может быть <see langword="null"/>).</param>
+    /// <param name="street">Улица (может быть <see langword="null"/>).</param>
+    /// <param name="building">Здание (может быть <see langword="null"/>).</param>
+    /// <param name="room">Помещение (может быть <see langword="null"/>).</param>
+    public Address(Region region, Locality? locality, PlanningElement? planningElement, 
+        Street? street, Building? building, Room? room)
     {
-        Region = builder._region ?? throw new ArgumentNullException(nameof(builder._region));
-        Locality = builder._locality ?? throw new ArgumentNullException(nameof(builder._locality));
-        PlanningElement = builder._planningElement ?? throw new ArgumentNullException(nameof(builder._planningElement));
-        Street = builder._street ?? throw new ArgumentNullException(nameof(builder._street));
-        Building = builder._building ?? throw new ArgumentNullException(nameof(builder._building));
-        Room = builder._room ?? throw new ArgumentNullException(nameof(builder._room));
+        Region = region;
+        Locality = locality;
+        PlanningElement = planningElement;
+        Street = street;
+        Building = building;
+        Room = room;
     }
     /// <summary>
     /// Возвращает строковое представление полного адреса в читаемом формате.
@@ -50,6 +64,31 @@ public class Address
     /// <returns>Возвращает строку</returns>
     public string GetFullAddress()
     {
-        return $"{Region.Name}, {Locality.Name}, {Street.Name} {Street.Type}, д. {Building.Number}, {Room.Type} {Room.Number}";
+        var list = this.Select(v => v.ToString()).ToList();
+        return string.Join(", ", list);
     }
+    /// <summary>
+    /// Возвращает перечислитель для перебора всех компонентов адреса, реализующих <see cref="IValueObject"/>.
+    /// </summary>
+    /// <returns>Перечислитель компонентов адреса (<see cref="Region"/>, <see cref="Locality"/>, 
+    /// <see cref="PlanningElement"/>, <see cref="Street"/>, <see cref="Building"/>, <see cref="Room"/>).</returns>
+    /// <remarks>
+    /// Перечисляет только свойства, значения которых реализуют <see cref="IValueObject"/> и не равны <see langword="null"/>.
+    /// </remarks>
+    public IEnumerator<IValueObject> GetEnumerator()
+    {
+        var properties = this.GetType().GetProperties();
+        foreach (var property in properties)
+        {
+            if (property.GetValue(this) is IValueObject value)
+            {
+                yield return value;
+            }
+        }
+    }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+    
 }
