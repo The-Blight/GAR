@@ -2,9 +2,11 @@
 
 namespace AddresDotNet;
 
-public record Locality
+public class Locality : ValueObject<LocalityType>, IValueObject
 {
-    public string Name { get; init; }
-    public LocalityType Type { get; init; }
-    
+    public override required LocalityType Type { get; init; }
+    public override required string Value { get; init; }
+
+    public override string ToString() => 
+        $"{EnumsMap.ToDisplay(Type, EnumsMap.LocalityTypeMap)} {Value}";
 }

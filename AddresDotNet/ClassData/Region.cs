@@ -1,9 +1,11 @@
 ﻿using AddresDotNet.Enum;
 namespace AddresDotNet;
 
-public record Region
+public class Region : ValueObject<RegionType>, IValueObject
 {
-    public string Name { get; init; }
-    public RegionType Type { get; init; }
+    public override required RegionType Type { get; init; }
+    public override required string Value { get; init; }
 
+    public override string ToString() => 
+        $"{Value} {EnumsMap.ToDisplay(Type, EnumsMap.RegionTypeMap)}";
 }
