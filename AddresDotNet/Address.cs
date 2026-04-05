@@ -7,7 +7,7 @@ namespace AddresDotNet;
 /// <summary>
 /// Неизменяемый объект адреса, собранный из отдельных компонентов.
 /// </summary>
-public class Address: IEnumerable<IValueObject>, IClone<Address>
+public class Address: IEnumerable<IValueObject>
 {
     /// <summary>
     /// Регион адреса.
