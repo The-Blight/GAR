@@ -1,4 +1,5 @@
-﻿using AddresDotNet.Enum;
+﻿using System;
+using AddresDotNet.Enum;
 
 namespace AddresDotNet;
 
@@ -6,32 +7,32 @@ namespace AddresDotNet;
 /// Строитель (Builder) для создания объекта адреса.
 /// Позволяет пошагово задать компоненты адреса и затем собрать неизменяемый <see cref="Address"/>.
 /// </summary>
-public class AddressBuilder : IBuilder
+public class AddressBuilder
 {
     /// <summary>
     /// Регион адреса.
     /// </summary>
-    public Region _region { get; private set; }
+    private Region _region { get; set; }
     /// <summary>
     /// Населённый пункт.
     /// </summary>
-    public Locality _locality{ get; private set; }
+    private Locality? _locality{ get; set; }
     /// <summary>
     /// Планировочный элемент.
     /// </summary>
-    public PlanningElement _planningElement{ get; private set; }
+    private PlanningElement? _planningElement{ get; set; }
     /// <summary>
     /// Улица или проезд.
     /// </summary>
-    public Street _street{ get; private set; }
+    private Street? _street{ get; set; }
     /// <summary>
     /// Здание.
     /// </summary>
-    public Building _building{ get; private set; }
+    private Building? _building{ get; set; }
     /// <summary>
     /// Помещение внутри здания.
     /// </summary>
-    public Room _room{ get; private set; }
+    private Room? _room{ get; set; }
     /// <summary>
     /// Устанавливает регион адреса.
     /// </summary>
@@ -40,7 +41,7 @@ public class AddressBuilder : IBuilder
     /// <returns>Текущий экземпляр <see cref="AddressBuilder"/> для цепочки вызовов.</returns>
     public AddressBuilder SetRegion(string name, RegionType type)
     {
-        _region = new Region { Name = name, Type = type };
+        _region = new Region { Value = name, Type = type };
         return this;
     }
     /// <summary>
@@ -51,7 +52,7 @@ public class AddressBuilder : IBuilder
     /// <returns>Текущий экземпляр <see cref="AddressBuilder"/> для цепочки вызовов.</returns>
     public AddressBuilder SetLocality(string name, LocalityType type)
     {
-        _locality = new Locality { Name = name, Type = type };
+        _locality = new Locality { Value = name, Type = type };
         return this;
     }
     /// <summary>
@@ -63,7 +64,7 @@ public class AddressBuilder : IBuilder
 
     public AddressBuilder SetPlanningElement(string name, PlanningElementType type)
     {
-        _planningElement = new PlanningElement { Name = name, Type = type };
+        _planningElement = new PlanningElement { Value = name, Type = type };
         return this;
     }
     /// <summary>
@@ -74,7 +75,7 @@ public class AddressBuilder : IBuilder
     /// <returns>Текущий экземпляр <see cref="AddressBuilder"/> для цепочки вызовов.</returns>
     public AddressBuilder SetStreet(string name, StreetType type)
     {
-        _street = new Street { Name = name, Type = type };
+        _street = new Street { Value = name, Type = type };
         return this;
     }
     /// <summary>
@@ -85,7 +86,7 @@ public class AddressBuilder : IBuilder
     /// <returns>Текущий экземпляр <see cref="AddressBuilder"/> для цепочки вызовов.</returns>
     public AddressBuilder SetBuilding(string number, BuildingType type)
     {
-        _building = new Building { Number = number, Type = type };
+        _building = new Building { Value = number, Type = type };
         return this;
     }
     /// <summary>
@@ -96,16 +97,27 @@ public class AddressBuilder : IBuilder
     /// <returns>Текущий экземпляр <see cref="AddressBuilder"/> для цепочки вызовов.</returns>
     public AddressBuilder SetRoom(string number, RoomType type)
     {
-        _room = new Room { Number = number, Type = type };
+        _room = new Room { Value = number, Type = type };
         return this;
     }
+
     /// <summary>
-    /// Собирает и возвращает объект адреса на основе заданных компонентов.
+    /// Собирает и возвращает объект(клон) адреса на основе заданных компонентов.
     /// </summary>
     /// <returns>Новый неизменяемый объект <see cref="Address"/>.</returns>
-    /// <exception cref="ArgumentNullException">Если какой‑либо обязательный компонент не задан.</exception>
+    /// <exception cref="InvalidOperationException">Если обязательный компонент (регион) не задан.</exception>
     public Address Build()
     {
-        return new Address(this);
+        if (_region == null)
+            throw new InvalidOperationException("Регион является обязательным компонентом адреса.");
+        return new Address(_region,_locality,_planningElement, _street,_building,_room)
+        {
+            Region = _region,
+            Locality = _locality,
+            PlanningElement = _planningElement,
+            Street = _street,
+            Building = _building,
+            Room =_room,
+        }.Clone();
     }
 }
